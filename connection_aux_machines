@@ -1,0 +1,12 @@
+########## pour se connecter aux machines il faut utiliser la connection ssh de vagrant#############
+pour le machine  FrontEnd :
+	vagrant ssh frontEnd
+
+Pour la machine BackEnd
+       vagrant ssh backEnd
+
+Pour la machine BD_noSQL
+      vagrant ssh bd_noSQL
+
+Pour la machine BD_MySQL
+      vagrant ssh db_MySQL
