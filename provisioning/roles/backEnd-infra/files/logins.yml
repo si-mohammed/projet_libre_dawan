@@ -1,0 +1,15 @@
+logins:
+  - login: bob
+    home: /home/bob
+    shell: /bin/bash
+    password: azerty
+    groupes:
+      - admin
+      - pedagogie
+  - login: curt
+    home: /home/curt
+    shell: /bin/bash
+    password: azerty
+    groupes:
+      - infos
+      - admin

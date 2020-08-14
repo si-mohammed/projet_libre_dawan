@@ -1,23 +1,24 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 # variable d'environnement 
-  # varibale répertoir du backEnd
-    FrontEnd_path = "/mnt/mes-sites/Mon_site"
-     # path des data pour le serveur apache
-    VM_FrontEnd_path = "/vagrant_data"
-    BackEnd_path = "/mnt/mes-sites/Mon_site"
+
+  # varibale répertoir du frontEnd
+    FrontEnd_path = "/mnt/mes-sites/Mon_site/frontEnd/"
+    VM_FrontEnd_path = "/usr/share/nginx/html"
+
     # path des data pour le serveur apache
+    BackEnd_path = "/mnt/mes-sites/Mon_site/backEnd/"
     VM_BackEnd_path = "/var/www/html"
 
-    BD_noSQL_path = "/mnt/mes-sites/Mon_site"
-     # path des data pour le serveur postgresql
-     VM_BD_noSQL_path = "/vagrant_data"
-    BD_MySQL_path = "/mnt/mes-sites/Mon_site"
-     # path des data pour le serveur MySQL
-     VM_BD_MySQL_path = "/vagrant_data"
-    Host_bridge = "enp3s0"
+    # path des data pour le serveur postgresql
+    BD_noSQL_path = "/mnt/mes-sites/Mon_site/dataNoSQL/"
+    VM_BD_noSQL_path = "/vagrant_data/dataNoSQL"
     
-
+    # path des data pour le serveur MySQL
+    BD_MySQL_path = "/mnt/mes-sites/Mon_site/dataMySQL/"
+    VM_BD_MySQL_path = "/vagrant_data/dataMySQL"
+    
+    Host_bridge = "enp3s0"
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
@@ -33,33 +34,38 @@ Vagrant.configure("2") do |config|
 
 config.vm.provision "shell",
     inline: <<-F00
-               echo "Hello, World, Mohammed infra pour mon site"
+               echo "Hello, World, Mohammed infra pour mon site from vagrant"
             F00
-          
+
   # config pour la VM FrontEnd
 config.vm.define "frontEnd", primary: true do |frontEnd|
-      frontEnd.vm.box = "ubuntu/trusty64"
-      # Disable automatic box update checking. If you disable this, then
-      # boxes will only be checked for updates when the user runs
-      # `vagrant box outdated`. This is not recommended.
-      config.vm.box_check_update = true
-      frontEnd.vm.provision "shell",
-        inline: <<-F00
-               echo "Hello, World, Mohammed frontEnd"
-            F00
-      #FrontEnd.vm.provision "shell",    
-      #        inline: <<-FFontEnd
-      #               sudo apt update
-      #               sudo apt install -y Nginx
-      #            FFrontEnd
 
-
+    frontEnd.vm.box = "bento/ubuntu-20.04"
+    # Disable automatic box update checking. If you disable this, then
+    # boxes will only be checked for updates when the user runs
+    # `vagrant box outdated`. This is not recommended.
+    config.vm.box_check_update = true
+      
+    frontEnd.vm.provision "shell", 
+                   # It's necessary to delte the index.html 
+                   # If it's present in the directory synchroned 
+                   # nginx-comm will stop on error 
+                   # on ubuntu 20 it's better to install ansible by shell
+                   # vagrant'll stop on error on automatic installation of ansible!!
+            inline: <<-FFrontEnd
+                   sudo apt update
+                   sudo apt -y upgrade
+                   sudo rm /usr/share/nginx/html/index.html
+                   sudo apt install -y ansible
+                   #sudo loadkeys fr
+                   
+            FFrontEnd
 
      # Create a forwarded port mapping which allows access to a specific port
      # within the machine from a port on the host machine. In the example below,
      # accessing "localhost:8080" will access port 80 on the guest machine.
      # NOTE: This will enable public access to the opened port
-     #config.vm.network "forwarded_port", guest: 81, host: 8081
+     config.vm.network "forwarded_port", guest: 81, host: 8081
 
      # Create a forwarded port mapping which allows access to a specific port
      # within the machine from a port on the host machine and only allow access
@@ -68,22 +74,24 @@ config.vm.define "frontEnd", primary: true do |frontEnd|
 
      # Create a private network, which allows host-only access to the machine
      # using a specific IP.
-     config.vm.network "private_network", type: "dhcp",  bridge: Host_bridge
+     frontEnd.vm.network "private_network", type: "dhcp",  bridge: Host_bridge
+       
      # Create a public network, which generally matched to bridged network.
      # Bridged networks make the machine appear as another physical device on
      # your network.
-     config.vm.network "public_network", bridge: Host_bridge
+     config.vm.network "public_network", bridge: Host_bridge, mac: "0800272287EF"
    
      # Share an additional folder to the guest VM. The first argument is
      # the path on the host to the actual folder. The second argument is
      # the path on the guest to mount the folder. And the optional third
      # argument is a set of non-required options.
      config.vm.synced_folder FrontEnd_path, VM_FrontEnd_path
-
+     
      # Provider-specific configuration so you can fine-tune various
      # backing providers for Vagrant. These expose provider-specific options.
      # Example for VirtualBox:
      #
+     
      config.vm.provider "virtualbox" do |vb|
      #   # Display the VirtualBox GUI when booting the machine
        vb.gui = true
@@ -94,7 +102,11 @@ config.vm.define "frontEnd", primary: true do |frontEnd|
      #   # Customize the amount of memory on the VM:
      vb.memory = "1024"
      end
-     
+
+    frontEnd.vm.provision :ansible_local do |ansible|
+      ansible.verbose = true
+      ansible.playbook = "provisioning/playbook-role-frontEnd.yml"           
+    end     
 end
 
 ###############################################################################################
@@ -112,13 +124,15 @@ config.vm.define "backEnd", primary: true do |backEnd|
       
       backEnd.vm.provision "shell",
         inline: <<-F00
-               echo "Hello, World, Mohammed backEnd"
+               echo "Hello, World, Mohammed backEnd from vagrant"
             F00
-      #FrontEnd.vm.provision "shell",    
-      #        inline: <<-FbackEnd
-      #               sudo apt update
-      #               sudo apt install -y apache2
-      #            FbackEnd
+      
+      backEnd.vm.provision "shell",    
+             inline: <<-FbackEnd
+                    sudo apt update
+                    sudo apt install -y apache2
+                    sudo loadkeys fr
+                 FbackEnd
 
 
 
@@ -141,6 +155,7 @@ config.vm.define "backEnd", primary: true do |backEnd|
       # Bridged networks make the machine appear as another physical device on
       # your network.
       #config.vm.network "public_network"
+      #config.vm.network "public_network", bridge: Host_bridge
    
       # Share an additional folder to the guest VM. The first argument is
       # the path on the host to the actual folder. The second argument is
@@ -163,6 +178,12 @@ config.vm.define "backEnd", primary: true do |backEnd|
         vb.memory = "1024"
       end
     
+      backEnd.vm.provision :ansible_local do |ansible|
+        ansible.become = true
+        ansible.playbook = "provisioning/playbook-role-backEnd.yml"
+        ansible.verbose = true
+      end
+
 end
 
 
@@ -178,7 +199,7 @@ config.vm.define "bd_noSQL", primary: true do |bd_noSQL|
       
       config.vm.provision "shell",
         inline: <<-F00
-               echo "Hello, World, Mohammed BD_noSQL"
+               echo "Hello, World, Mohammed BD_noSQL from vagrant"
             F00
       bd_noSQL.vm.box = "ubuntu/trusty64"
       # Disable automatic box update checking. If you disable this, then
@@ -186,11 +207,12 @@ config.vm.define "bd_noSQL", primary: true do |bd_noSQL|
       # `vagrant box outdated`. This is not recommended.
       config.vm.box_check_update = true
 
-      #BD_noSQL.vm.provision "shell",    
-      #        inline: <<-Fbd_noSQL
+      bd_noSQL.vm.provision "shell",    
+              inline: <<-Fbd_noSQL
       #               sudo apt update
       #               sudo apt install -y postgresql postgresql-contrib
-      #            Fbd_noSQL
+                      sudo loadkeys fr
+                  Fbd_noSQL
 
 
 
@@ -241,22 +263,22 @@ end
 
  ############################################################################################  
 # Partie BD_MySQL
-config.vm.provision "shell",
-    inline: <<-F00
-               echo "Hello, World, Mohammed BD_MySQL"
-            F00
-
 
 config.vm.define "db_MySQL" do |db_MySQL|
+	config.vm.provision "shell",
+    inline: <<-F00
+               echo "Hello, World, Mohammed BD_MySQL fromm vagrant"
+            F00
     db_MySQL.vm.box = "ubuntu/trusty64"
 
     config.vm.box_check_update = true
 
-    #db_MySQL.vm.provision "shell",
-     #  inline: <<-Fdb_MySQL
+    db_MySQL.vm.provision "shell",
+       inline: <<-Fdb_MySQL
      #         sudo apt update
      #           sudo apt install -y mariadb-server
-     #         Fdb_MySQL
+               sudo loadkeys fr
+              Fdb_MySQL
 
 
     #config.vm.network "forwarded_port", guest: 84, host: 8084

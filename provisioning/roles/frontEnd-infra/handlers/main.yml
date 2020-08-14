@@ -1,0 +1,8 @@
+---
+# handlers file for roles/infraWeb
+# handlers:
+   - name: Redémarrage des serveurs si modification des ports d'écoute
+     systemd:
+       name: "{{nginx_service_name}}"
+       state: restarted
+     listen: restart_nginx

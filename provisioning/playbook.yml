@@ -1,0 +1,19 @@
+---
+- hosts: all
+  become: true
+
+  gather_facts: False
+  pre_tasks:
+    - name: Install python for Ansible
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+      changed_when: False
+    - setup: # aka gather_facts
+
+  # tasks:
+  #   - name: ensure ntpd is at the latest version
+  #     apt: pkg=ntp state=latest
+  #     notify:
+  #     - restart ntpd
+  # handlers:
+  #   - name: restart ntpd
+  #     service: name=ntpd state=restarted

@@ -1,0 +1,17 @@
+---
+      # Clause when 
+
+  - name: Désactivation du firewalld
+    when: ansible_distribution  == "CentOS" 
+    systemd:
+      name: firewalld
+      state: restarted
+  
+  - name: Désactivation du firewalld service ou port
+    when: ansible_distribution == "CentOS"
+    firewalld:
+      port: "{{apache_port}}/tcp"
+      permanent: yes
+      immediate: yes
+      state: enabled
+  ### fin de la clause when

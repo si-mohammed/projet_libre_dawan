@@ -1,0 +1,6 @@
+---
+- name: Activation et demarrage du service httpd
+  systemd:
+    name: "{{apache_service_name}}"
+    state: started
+    enabled: yes

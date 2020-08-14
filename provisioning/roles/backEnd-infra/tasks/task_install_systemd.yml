@@ -1,0 +1,4 @@
+- name: install apache server
+  package:
+    name: "systemd"
+    state: latest

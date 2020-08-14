@@ -1,0 +1,16 @@
+server {
+        listen 8888 default_server;
+        listen [::]:8888 default_server;
+
+        #listen [::]:444 ssl;
+        #ssl_certificate /path_to_cert_file;
+        #ssl_certificate_key /path_to_cert_key_file;
+
+        #root /var/www/html;
+        #index index.php index.html index.htm;
+
+        #server_name _;
+
+        #location / {
+        #     try_files $uri $uri/ =404;
+        }              

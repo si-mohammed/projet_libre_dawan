@@ -1,0 +1,6 @@
+---
+# vars file for roles/infraWeb
+    
+# - name: Include des vars Ubuntu
+#   include_vars:
+#     file: "vars/Ubuntu.yml"

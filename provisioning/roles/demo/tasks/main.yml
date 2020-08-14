@@ -1,0 +1,9 @@
+---
+# tasks file for roles/demo
+- name: Tache 1 du roles demo
+  debug:
+    msg: "demo  tache 1"
+- name: Tache 2 du roles demo
+  debug:
+    msg: "demo  tache 2"
+

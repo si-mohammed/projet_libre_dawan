@@ -1,0 +1,4 @@
+---
+- name: test avec un acte
+  debug:
+    msg: " hello world install nginx avec une variable de groupe"

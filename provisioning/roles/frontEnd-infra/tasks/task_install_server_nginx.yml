@@ -1,0 +1,28 @@
+- name: test install server nginx
+  debug:
+    msg: " hello install nginx server"
+
+
+# - name: remove the Nginx package
+#   package:
+#     name: "{{nginx_package_name}}"
+#     state: absent
+#   become: true
+
+# - name: install the nginx rpm from a remote repo
+#   dnf:
+#     name: 'http://nginx.org/packages/centos/6/noarch/RPMS/nginx-release-centos-6-0.el6.ngx.noarch.rpm'
+#     state: present
+
+- name: install nginx server
+  package:
+    name: "{{nginx_package_name}}"
+    state: latest
+  become: true
+
+# - name: Update the repository cache and update package "nginx" to latest version using default release squeeze-backport
+#   apt:
+#     name: nginx
+#     state: latest
+#     default_release: squeeze-backports
+#     update_cache: yes

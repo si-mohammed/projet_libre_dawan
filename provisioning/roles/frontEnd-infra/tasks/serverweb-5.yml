@@ -1,0 +1,58 @@
+---
+- name: mise en oeuvre d'un site web
+  hosts: all 
+  gather_facts: yes 
+
+  tasks:
+  - name: test avec un acte 
+    debug: 
+      msg: " hello world install apache2 avec un variable de groupe"
+      
+  - name: install apache server
+    package: 
+      name: "{{apache_package_name}}"
+      state: latest
+
+  - name: Activation et demarrage du service httpd
+    systemd:
+      name: "{{apache_service_name}}"
+      state: started
+      enabled: yes
+
+      # Clause when 
+
+  - name: Désactivation du firewalld
+    when: ansible_distribution  == "CentOS" 
+    systemd:
+      name: firewalld
+      state: restarted
+  
+  - name: Désactivation du firewalld service ou port
+    when: ansible_distribution == "CentOS"
+    firewalld:
+      port: "{{apache_port}}/tcp"
+      permanent: yes
+      immediate: yes
+      state: enabled  
+ ### fin de la clause when
+
+## configuration du port de Listen
+  - name: Configuration du port d'écoute pour http
+    lineinfile:
+      path: "{{apache_port_file}}"
+      line: "Listen {{apache_port}}"
+      regexp: "^Listen"
+    notify: restart_apache  
+
+  - name: copy du fichier index.html
+    copy:
+     src: files/index.html
+     dest: "{{apache_document_root}}"
+
+  handlers:
+   - name: Redémarrage des serveurs si modification des ports d'écoute
+     systemd:
+       name: "{{apache_service_name}}"
+       state: restarted
+     listen: restart_apache  
+

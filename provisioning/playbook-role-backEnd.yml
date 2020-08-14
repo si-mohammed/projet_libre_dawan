@@ -1,0 +1,8 @@
+---
+- name: Utilisation du rôle backEnd-infra
+  hosts: all
+  gather_facts: yes
+  become: true
+
+  roles:
+    - backEnd-infra 

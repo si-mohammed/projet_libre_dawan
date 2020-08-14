@@ -1,0 +1,4 @@
+---
+- name: test avec un acte
+  debug:
+    msg: " hello world install apache2 avec un variable de groupe"

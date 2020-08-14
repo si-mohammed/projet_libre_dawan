@@ -1,0 +1,8 @@
+---
+- name: Utilisation du rôle frontEnd-infra
+  hosts: all
+  gather_facts: yes
+
+# role to install nginx server
+  roles:
+    - role: frontEnd-infra

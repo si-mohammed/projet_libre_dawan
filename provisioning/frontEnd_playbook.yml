@@ -1,0 +1,60 @@
+---
+- name: mise en oeuvre d'un site web
+  hosts: all 
+  gather_facts: yes
+  become: yes 
+
+  # pre_tasks:
+  #   - name: Install python for Ansible
+  #     debug: 
+  #       msg: " hello install python"
+  #     raw: test -e /usr/bin/python || (apt -y update && apt install --reinstall -y python-minimal)
+  #     changed_when: False
+    #- setup: # aka gather_facts
+
+
+  tasks:
+  - name: test avec un acte 
+    debug: 
+      msg: " hello world install Nginx avec une variable de groupe"
+      
+  - name: install Nginx server
+    apt: name=nginx-full state=latest
+  # - name: start nginx
+  #     service:
+  #       name: nginx
+  #       state: started
+  - name: test Nginx
+    debug:     
+      msg: " Bonjour monde"
+    
+    # package: 
+    #   name: "Nginx" #"{{Nginx_package_name}}"
+    #   state: latest
+
+  # - name: Activation et demarrage du service httpd
+  #   systemd:
+  #     name: "nginx" #"{{Nginx_service_name}}"
+  #     state: started
+  #     enabled: yes
+
+     
+# ## configuration du port de Listen
+#   - name: Configuration du port d'écoute pour http
+#     lineinfile:
+#       path: "{{apache_port_file}}"
+#       line: "Listen {{apache_port}}"
+#       regexp: "^Listen"
+#     notify: restart_Nginx  
+
+#   - name: copy du fichier index.html
+#     copy:
+#      src: files/index.html
+#      dest: "{{Nginx_document_root}}"
+
+#   handlers:
+#    - name: Redémarrage des serveurs si modification des ports d'écoute
+#      systemd:
+#        name: "{{Nginx_service_name}}"
+#        state: restarted
+#      listen: restart_Nginx  

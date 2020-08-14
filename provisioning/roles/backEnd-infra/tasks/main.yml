@@ -1,0 +1,44 @@
+---
+# tasks file for roles/infraback
+- name: test du main
+  debug:
+    msg: " hello world exécution des taches du main"
+- name: test du main
+  debug:
+    msg: "{{role_path}}"
+
+- name: Tache hello configuration test ansible
+  include_tasks:
+    file: "{{role_path}}/tasks/hello_world.yml"
+
+- name: Inclusion des variables
+  include_vars:
+    file: "vars/{{ansible_distribution}}.yml"
+
+- name: Tache de creat users
+  include_tasks:               
+    file: "{{role_path}}/tasks/task_creation_user.yml"
+
+- name: Tache d'installa du serveur apache
+  include_tasks:               
+    file: "{{role_path}}/tasks/task_install_server_apache.yml"
+
+- name: Tache de creat users
+  include_tasks:               
+    file: "{{role_path}}/tasks/task_creation_user.yml"
+
+- name: Tache d'installa du systemd systemctl
+  include_tasks:               
+    file: "{{role_path}}/tasks/task_install_systemd.yml"
+
+# - name: Tache activation de démarrage service httpd
+#   include_tasks:
+#     file: "{{role_path}}/tasks/Activation_demarrage_service_httpd.yml"
+
+- name: Tache du configuration du port d'écoute html
+  include_tasks:
+    file: "{{role_path}}/tasks/task_configuration_port.yml"
+
+- name: Tache de copie du fichier index.html
+  include_tasks:
+    file: "{{role_path}}/tasks/task_copie_index.html.yml"

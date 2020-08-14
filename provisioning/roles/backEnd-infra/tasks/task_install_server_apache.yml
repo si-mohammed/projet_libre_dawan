@@ -1,0 +1,4 @@
+- name: install apache server
+  package:
+    name: "{{apache_package_name}}"
+    state: latest

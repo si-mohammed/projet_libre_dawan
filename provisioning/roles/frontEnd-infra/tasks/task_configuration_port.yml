@@ -1,0 +1,27 @@
+## configuration du port de Listen
+- name: Configuration du port d'écoute pour http
+  become: true 
+  copy:
+    src: "{{role_path}}/files/default"
+    dest: "{{nginx_document_default}}"
+  #notify: restart_nginx
+- name: reload nginx
+  become: true
+  service:
+    name: nginx
+    state: reloaded
+
+
+  # handlers:
+  #  - name: Redémarrage du serveur si modification des ports d'écoute
+  #    systemd:
+  #      name: "{{nginx_service_name}}"
+  #      state: restarted
+  #    listen: restart_nginx
+
+  #   lineinfile:
+  #   path: "{{nginx_port_file}}"
+  #   line: "Listen {{nginx_port}}"
+  #   regexp: "^Listen"
+  # notify: restart_nginx
+

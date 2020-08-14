@@ -1,0 +1,9 @@
+## configuration du port de Listen
+- name: Configuration du port d'écoute pour http
+  become: true 
+  lineinfile:
+    path: "{{apache_port_file}}"
+    line: "Listen {{apache_port}}"
+    regexp: "^Listen"
+  notify: restart_apache
+

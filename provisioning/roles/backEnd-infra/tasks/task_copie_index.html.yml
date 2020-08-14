@@ -1,0 +1,5 @@
+- name: copy du fichier index.html
+  become: true
+  copy:
+    src: "{{role_path}}/files/index.html"
+    dest: "{{apache_document_root}}"

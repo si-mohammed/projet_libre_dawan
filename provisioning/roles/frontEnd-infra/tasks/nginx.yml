@@ -1,0 +1,10 @@
+---
+- hosts:
+  become: true
+  tasks:
+    - name: install nginx
+      apt: name=nginx update_cache=yes state=latest
+    - name: run echo command
+      command: /bin/echo hello world nginx
+
+

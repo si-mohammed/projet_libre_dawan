@@ -1,0 +1,35 @@
+---
+#- name: mise en oeuvre dun site web
+ # become: true
+  #hosts: all
+  #gather_facts: yes
+# - name:
+#   become: true
+#   vars:
+#     password: secret
+
+- name:
+  include_vars:
+    file: "{{role_path}}/files/logins.yml"
+
+- name: passage clavier fr
+  become: true
+  shell:
+    cmd: loadkeys fr
+
+
+- name: Création des groupes
+  become: true  
+  group:
+    name: "{{item.1}}"
+  loop: "{{logins|subelements('groupes')}}"
+
+- name: Création des comptes
+  become: true
+  user:
+    name: "{{item.login}}"
+    home: "{{item.home}}"
+    password: "{{item.password|password_hash('sha512','123456')}}"
+    shell: "{{item.shell}}"
+    groups: "{{item.groupes}}"
+  loop: "{{logins}}"

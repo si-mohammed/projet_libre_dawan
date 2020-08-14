@@ -1,0 +1,4 @@
+# fichier des var du groupe Debian
+nginx_service_name: nginx
+nginx_port_file: /etc/nginx/sites-enabled
+nginx_package_name: nginx
